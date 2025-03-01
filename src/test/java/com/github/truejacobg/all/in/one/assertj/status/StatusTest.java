@@ -1,4 +1,4 @@
-package com.github.truejacobg.all.in.one.assertj;
+package com.github.truejacobg.all.in.one.assertj.status;
 
 import org.junit.jupiter.api.Test;
 
