@@ -81,4 +81,7 @@ public class ConfigurationTest {
 
         configuration.applyAndDisplay();
     }
+
+    // or you can use configuration file that will get applied automatically
+    // more info - https://assertj.github.io/doc/#automatic-configuration-discovery
 }
