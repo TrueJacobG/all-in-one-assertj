@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class TolkienCharacter {
     private String name;
-    private int age;
+    private Integer age;
     private Race race;
 }
