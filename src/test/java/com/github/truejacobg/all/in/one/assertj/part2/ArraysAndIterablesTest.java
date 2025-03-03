@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.in;
 import static org.assertj.core.api.AssertionsForClassTypes.not;
 import static org.assertj.core.api.AssertionsForClassTypes.notIn;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 
 public class ArraysAndIterablesTest {
@@ -165,5 +166,48 @@ public class ArraysAndIterablesTest {
         // filter on assertions
         assertThat(fellowshipOfTheRing).filteredOnAssertions(hobbit -> assertThat(hobbit.getAge()).isLessThan(100))
                 .containsOnly(sam);
+    }
+
+    @Test
+    void extracting() {
+        var frodo = new TolkienCharacter("Frodo", 111, new Race("Hobbit"));
+        var sam = new TolkienCharacter("Sam", 93, new Race("Hobbit"));
+        var sauron = new TolkienCharacter("Sauron", null, new Race("idk"));
+        var fellowshipOfTheRing = List.of(frodo, sam, sauron);
+
+        // "name" needs to be either a property or a field of the TolkienCharacter class
+        // you can make it strongly type by providing class
+        assertThat(fellowshipOfTheRing).extracting("name", String.class)
+                .contains("Sauron", "Sam", "Frodo")
+                .doesNotContain("NotSauron", "SomethingElse");
+
+        // specifying nested field/property is supported
+        assertThat(fellowshipOfTheRing).extracting("race.name")
+                .contains("Hobbit", "idk");
+
+        // same thing with a lambda which is type safe and refactoring friendly:
+        assertThat(fellowshipOfTheRing).extracting(TolkienCharacter::getName)
+                .contains("Frodo");
+        // same thing with map
+        assertThat(fellowshipOfTheRing).map(TolkienCharacter::getName)
+                .contains("Frodo");
+
+        // extracting multiple values
+        assertThat(fellowshipOfTheRing).extracting("name", "age")
+                .contains(tuple("Frodo", 111))
+                .doesNotContain(tuple("Sauron", 2115)); // because there is no combination of those values
+
+        // and the same with lambdas
+        assertThat(fellowshipOfTheRing).extracting(TolkienCharacter::getName, tolkienCharacter -> tolkienCharacter.getAge())
+                .contains(tuple("Frodo", 111));
+
+        // flat extracting
+        // with that you don't have to use tuples
+        assertThat(fellowshipOfTheRing).flatExtracting("name", "race.name")
+                .contains("Frodo", "Hobbit", "Sam", "Hobbit");
+
+        // using custom comparator
+        assertThat(fellowshipOfTheRing).usingElementComparator((t1, t2) -> t1.getRace().compareTo(t2.getRace()))
+                .contains(sauron);
     }
 }
