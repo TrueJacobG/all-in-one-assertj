@@ -3,11 +3,16 @@ package com.github.truejacobg.all.in.one.assertj.part2;
 import com.github.truejacobg.all.in.one.assertj.Address;
 import com.github.truejacobg.all.in.one.assertj.AlmostHome;
 import com.github.truejacobg.all.in.one.assertj.AlmostPerson;
+import com.github.truejacobg.all.in.one.assertj.Author;
+import com.github.truejacobg.all.in.one.assertj.AuthorDto;
+import com.github.truejacobg.all.in.one.assertj.Book;
+import com.github.truejacobg.all.in.one.assertj.BookDto;
 import com.github.truejacobg.all.in.one.assertj.Doctor;
 import com.github.truejacobg.all.in.one.assertj.Home;
 import com.github.truejacobg.all.in.one.assertj.Human;
 import com.github.truejacobg.all.in.one.assertj.Person;
 import com.github.truejacobg.all.in.one.assertj.TolkienCharacter;
+import org.assertj.core.api.recursive.comparison.ComparingSnakeOrCamelCaseFields;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
 import org.junit.jupiter.api.Test;
 
@@ -344,5 +349,24 @@ public class FieldByFieldRecursiveComparisonTest {
         // assertion fails because howard is missing and leonard is not expected.
         assertThat(doctors).usingRecursiveFieldByFieldElementComparator(configuration)
                 .doesNotContain(howard);
+    }
+
+    @Test
+    void specifyingHowToCompareObjects() {
+        var martinFowler = new Author("Martin", "Fowler", 58, "https://somelink.com");
+        var refactoring = new Book("Refactoring", martinFowler);
+        var martinFowlerDto = new AuthorDto("Martin", "Fowler", 58, "https://somelink.com");
+        var refactoringDto = new BookDto("Refactoring", martinFowlerDto);
+
+        // example of ComparingNormalizedFields
+        var comparingSnakeOrCamelCaseFields = new ComparingSnakeOrCamelCaseFields();
+
+        assertThat(refactoring).usingRecursiveComparison()
+                .withIntrospectionStrategy(comparingSnakeOrCamelCaseFields)
+                .isEqualTo(refactoringDto);
+
+        assertThat(refactoringDto).usingRecursiveComparison()
+                .withIntrospectionStrategy(comparingSnakeOrCamelCaseFields)
+                .isEqualTo(refactoring);
     }
 }
