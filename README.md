@@ -5,7 +5,7 @@
 - https://assertj.github.io/doc/#assertj-overview
 
 #### Usage
-`make cb` -> build dir -> go through vanilla classes and compare it with lombok ones
+`make cb` -> build project and go through all test cases in `src/test`
 
 notes.md -> ultimate cheatsheet
 

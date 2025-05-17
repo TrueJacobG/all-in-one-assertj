@@ -31,6 +31,13 @@ dependencies {
 	testImplementation 'org.assertj:assertj-core:3.27.3'
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
 
+	// Joda + AssertJ Joda
+	implementation("joda-time:joda-time:2.14.0")
+	testImplementation("org.assertj:assertj-joda-time:2.2.0")
+
+	// AssertJ Db
+	testImplementation("org.assertj:assertj-db:3.0.0")
+
 	// Lombok
 	compileOnly 'org.projectlombok:lombok:1.18.36'
 	annotationProcessor 'org.projectlombok:lombok:1.18.36'
